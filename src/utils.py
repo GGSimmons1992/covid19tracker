@@ -10,6 +10,9 @@ import json
 import plotly.express as px
 import plotly.graph_objects as go
 
+import seaborn as sns
+from statsmodels.graphics.gofplots import qqplot
+
 def makeChoropleth(df,valueColumn,title,colorRange = [0,0]):
     nonNanDF = df[df[valueColumn] != np.nan]
     
@@ -31,3 +34,24 @@ def makeChoropleth(df,valueColumn,title,colorRange = [0,0]):
     imgTitle = title.replace(" ","")
     fig.write_image(f'../images/{imgTitle}.png')
     return fig
+
+def checkNormality(df,valueColumn):
+    fig,axs = plt.subplots(2,1)
+    sns.histplot(df[valueColumn],kde=True,ax=axs[0])
+    qqplot(df[valueColumn],line='s',ax=axs[1])
+    figTitle = f'Normal Check for {valueColumn}'
+    fig.suptitle(figTitle)
+    plt.savefig(f'../images/{figTitle.replace(" ","")}.png')
+    plt.show()
+
+def spearmanCorrelate(df,xCol,yCol,title):
+    nonNanDF = df[[xCol,yCol]].dropna()
+    
+    ax = sns.regplot(x = nonNanDF[xCol], y = nonNanDF[yCol], scatter_kws = {'s':8},fit_reg = False)
+    sns.regplot(x = nonNanDF[xCol], y = nonNanDF[yCol], scatter=False, ci=95, fit_reg = True,
+    color = 'orange', lowess = True)
+    ax.set(xlabel = xCol, ylabel = yCol)
+    rValue,pValue = stats.spearmanr(nonNanDF)
+    ax.set(title = f'{title} R={rValue:.2f}, p={pValue:.3f}')
+    plt.savefig(f'../images/{title.replace(" ","")}.png')
+    plt.show()
