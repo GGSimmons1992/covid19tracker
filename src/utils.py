@@ -32,7 +32,7 @@ def makeChoropleth(df,valueColumn,title,colorRange = [0,0]):
 
     fig.update_layout(title_text=title)
     imgTitle = title.replace(" ","")
-    fig.write_image(f'../images/{imgTitle}.png')
+    fig.write_image(f'../images/choropleths/{imgTitle}.png')
     return fig
 
 def checkNormality(df,valueColumn):
@@ -41,7 +41,7 @@ def checkNormality(df,valueColumn):
     qqplot(df[valueColumn],line='s',ax=axs[1])
     figTitle = f'Normal Check for {valueColumn}'
     fig.suptitle(figTitle)
-    plt.savefig(f'../images/{figTitle.replace(" ","")}.png')
+    plt.savefig(f'../images/normalChecks/{figTitle.replace(" ","")}.png')
     plt.show()
 
 def spearmanCorrelate(df,xCol,yCol,title):
@@ -52,6 +52,6 @@ def spearmanCorrelate(df,xCol,yCol,title):
     color = 'orange', lowess = True)
     ax.set(xlabel = xCol, ylabel = yCol)
     rValue,pValue = stats.spearmanr(nonNanDF)
-    ax.set(title = f'{title} R={rValue:.2f}, p={pValue:.3f}')
-    plt.savefig(f'../images/{title.replace(" ","")}.png')
+    ax.set(title = f'{title} R={rValue:.2f}, p={pValue:.5f}')
+    plt.savefig(f'../images/correlations/{title.replace(" ","")}.png')
     plt.show()
