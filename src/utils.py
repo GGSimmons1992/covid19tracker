@@ -50,7 +50,7 @@ def createBarChart(df,valueColumn,title,suffix):
     ax = df.plot(kind='barh',legend=False)
     ax.set_title(f'{title} {suffix}')
     ax.set_xlabel(valueColumn)
-    plt.savefig(f'../images/barCharts/{title.replace(" ","")}{suffix}')
+    plt.savefig(f'../images/barCharts/{title.replace(" ","")}{suffix.replace(" ","")}')
 
 def checkNormality(df,valueColumn):
     fig,axs = plt.subplots(2,1)
