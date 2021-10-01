@@ -35,6 +35,23 @@ def makeChoropleth(df,valueColumn,title,colorRange = [0,0]):
     fig.write_image(f'../images/choropleths/{imgTitle}.png')
     return fig
 
+def createBarCharts(df,valueColumn,title):
+    nonNanDF = df[~df[valueColumn].isnull()]
+    valuesDF = nonNanDF[['Country/Territory',valueColumn]]
+    valuesDF = valuesDF.sort_values(by=valueColumn).set_index('Country/Territory')
+    
+    top5 = valuesDF.tail(5)
+    bottom5 = valuesDF.head(5)
+
+    createBarChart(top5,valueColumn,title,'Top 5')
+    createBarChart(bottom5,valueColumn,title,'Bottom 5') 
+
+def createBarChart(df,valueColumn,title,suffix):
+    ax = df.plot(kind='barh',legend=False)
+    ax.set_title(f'{title} {suffix}')
+    ax.set_xlabel(valueColumn)
+    plt.savefig(f'../images/barCharts/{title.replace(" ","")}{suffix}')
+
 def checkNormality(df,valueColumn):
     fig,axs = plt.subplots(2,1)
     sns.histplot(df[valueColumn],kde=True,ax=axs[0])
